@@ -1,6 +1,19 @@
-from django.test import TestCase
+from django.test import SimpleTestCase, TestCase
+from django.urls import reverse
+from django.urls.base import resolve
 
 from .models import Catalog
+from .views import home
+
+
+class ElibraryURLsTest(SimpleTestCase):
+    def test_homepage_url_name(self):
+        response = self.client.get(reverse("home"))
+        self.assertEqual(response.status_code, 200)
+
+    def test_root_url_resolves_to_homepage_view(self):
+        found = resolve("/")
+        self.assertEqual(found.func, home)
 
 
 class CatalogModelTests(TestCase):
