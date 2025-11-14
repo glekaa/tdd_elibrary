@@ -1,6 +1,21 @@
 from django.http import HttpResponse
 from django.shortcuts import render
 
+from .forms import AddBookForm
+from .models import Catalog
+
 
 def home(request):
-    return HttpResponse("Hello world")
+    if request.method == "POST":
+        add_book_form = AddBookForm(data=request.POST)
+        if add_book_form.is_valid():
+            add_book_form.save()
+
+    else:
+        add_book_form = AddBookForm()
+
+    books = Catalog.objects.all()
+
+    return render(
+        request, "home.html", {"add_book_form": add_book_form, "books": books}
+    )
